@@ -1,5 +1,5 @@
-import { Catalog } from "../../db/CatalogModel";
-import connectDB from "../../auth/lib/connectDB";
+import { Catalog } from "./../../db/CatalogModel";
+import connectDB from "./../../auth/lib/connectDB";
 connectDB();
 
 export default async function handler(req, res) {
