@@ -13,12 +13,15 @@ import useLoggedin from "../components/hooks/useLoggedin";
 import Loading from "../components/utiles/Loading";
 import { useRouter } from "next/router";
 import Loaderror from "../components/utiles/Loaderror";
+import ErrorPage from "next/error";
 
 export default function Login({ csrfToken }) {
   const [isloading, isloggedin, data] = useLoggedin();
   const [errors, seterrors] = useState([]);
   const ro = useRouter();
-  useEffect(() => {}, [isloading]);
+  if (!ro.isFallback && !csrfToken) {
+    return <ErrorPage statusCode={404} />;
+  }
   if (isloading == true) return <Loading />;
   return (
     <div className='flex items-center justify-center w-[100vw] h-[100vh] fixed top-0'>

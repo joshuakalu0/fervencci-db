@@ -6,6 +6,7 @@ import Rotator from "../../../components/utiles/Back";
 import { Modelfind } from "../../api/db";
 import useLoggedin from "../../../components/hooks/useLoggedin";
 import Loading from "../../../components/utiles/Loading";
+import ErrorPage from "next/error";
 
 export default function Action(data) {
   const record_i = JSON.parse(data.record);
@@ -13,6 +14,10 @@ export default function Action(data) {
   const fields = Object.keys(record);
   const [isloading, isloggedin, session] = useLoggedin("/");
   const premission = session.premission;
+  const ro = user;
+  if (!ro.isFallback && !data) {
+    return <ErrorPage statusCode={404} />;
+  }
   if (isloading == true) return <Loading />;
   if (premission !== "staff" || premission !== "admin")
     <Loading text='permission denied' />;
@@ -62,19 +67,22 @@ export default function Action(data) {
 }
 
 export async function getServerSideProps(context) {
-  connectDB();
-
   const list = context.params.index;
+  if (!list[0]) {
+    return {
+      notFound: true,
+    };
+  }
+
+  connectDB();
   if (list[0] && list[1]) {
     console.log(true, "list");
     const tableName = list[0];
     const recordID = list[1];
     const Model = Modelfind(tableName);
-
-    let response = "";
+    let response = null;
     try {
       response = await Model.findById(recordID);
-      console.log(response, recordID);
     } catch (error) {
       return {
         notFound: true,
@@ -84,7 +92,6 @@ export async function getServerSideProps(context) {
       record: response,
       table: tableName,
     };
-    console.log(record);
     return {
       props: {
         record: JSON.stringify(record),
