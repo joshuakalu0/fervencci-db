@@ -1,4 +1,4 @@
-import { User } from "./../../db/userModel";
+import { Gallery as Catalog } from "./../../db/galleryModel";
 import connectDB from "../../auth/lib/connectDB";
 // import { unstable_getServerSession } from "next-auth/next";
 // import { authOptions } from "../../auth/[...nextauth]";
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   if (req.method == "DELETE") {
     const dataID = req.query.recordid;
     try {
-      const data = await User.findByIdAndDelete(dataID);
+      const data = await Catalog.findByIdAndDelete(dataID);
       res.status(200).json({ status: "successful", data });
     } catch (error) {
       const erro = requestError(error);

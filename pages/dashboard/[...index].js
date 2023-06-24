@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Modelfind } from "../api/db";
 import useLoggedin from "../../components/hooks/useLoggedin";
 import Loading from "../../components/utiles/Loading";
+import ErrorPage from "next/error";
 
 export default function Action(serverdata) {
   const formdata = JSON.parse(serverdata?.response);
@@ -23,6 +24,9 @@ export default function Action(serverdata) {
   const [makeRequest] = useFetchUpload(setissubmitting, setupload);
   const [isloading, isloggedin, session] = useLoggedin("/");
   const premission = session.premission;
+  if (!ro.isFallback && !serverdata) {
+    return <ErrorPage statusCode={404} />;
+  }
   if (isloading == true) return <Loading />;
   if (premission !== "staff" || premission !== "admin")
     return <Loading text='permission denied ☢❌💀💀' />;

@@ -1,4 +1,4 @@
-import { User } from "./../../db/userModel";
+import { Gallery as Catalog } from "./../../db/galleryModel";
 import connectDB from "./../../auth/lib/connectDB";
 import bcrypt from "bcrypt";
 
@@ -13,11 +13,9 @@ export const config = {
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
-    let salt = await bcrypt.genSalt(10);
-    let newpassword = await bcrypt.hash(req.body.password, salt);
-    req.body.password = newpassword;
+    req.body.thumbnail = req.body.photos[0];
     try {
-      const data = await User.create(req.body);
+      const data = await Catalog.create(req.body);
       res.status(200).json({ status: "successful", data });
     } catch (error) {
       res.status(400).json({ status: "an error occured", err });

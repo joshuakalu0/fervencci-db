@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
-const catalogSchema = new Schema({
+const gallerySchema = new Schema({
   design_name: {
     type: String,
     require: [true, "design_name field is required"],
@@ -25,5 +25,5 @@ const catalogSchema = new Schema({
  */
 // Uk
 // lets export it, so we can import it in other files.
-export const Catalog =
-  mongoose.models.Catalog || mongoose.model("Catalog", catalogSchema);
+export const Gallery =
+  mongoose.models.Gallery || mongoose.model("Gallery", gallerySchema);

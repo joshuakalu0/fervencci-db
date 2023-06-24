@@ -1,4 +1,4 @@
-import { User } from "./../../db/userModel";
+import { Gallery as Catalog } from "./../../db/galleryModel";
 import connectDB from "../../auth/lib/connectDB";
 connectDB();
 
@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const recordlimit = limit || 5;
 
     try {
-      const data = await User.find()
+      const data = await Catalog.find()
         .sort("-createdAt")
         .skip(skip)
         .limit(recordlimit)

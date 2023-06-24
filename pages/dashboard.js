@@ -9,12 +9,18 @@ import Sidemenu from "../components/dashboard/side";
 import Mainsection from "../components/dashboard/main";
 import { Modelfind } from "./api/db";
 import { display } from "../lib";
+import { useRouter } from "next/router";
+import ErrorPage from "next/error";
 
 export default function Dashboard(record_i) {
-  const page = JSON.parse(record_i.page);
-  const record = JSON.parse(record_i.records);
+  const ro = useRouter();
   const [object, setter] = useContext(Dashboardcontext);
   const [isloading, isloggedin, data] = useLoggedin("/");
+  if (!ro.isFallback && !record_i) {
+    return <ErrorPage statusCode={404} />;
+  }
+  const page = JSON.parse(record_i.page);
+  const record = JSON.parse(record_i.records);
   console.log(data, "dd");
   if (record && record.length !== 0) {
     object[page] = record;

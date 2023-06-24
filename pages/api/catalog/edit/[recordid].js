@@ -1,4 +1,4 @@
-import { User } from "./../../db/userModel";
+import { Gallery as Catalog } from "./../../db/galleryModel";
 import connectDB from "../../auth/lib/connectDB";
 import bcrypt from "bcrypt";
 
@@ -27,11 +27,13 @@ export default async function handler(req, res) {
       runValidators: true,
     };
 
-    let salt = await bcrypt.genSalt(10);
-    let newpassword = await bcrypt.hash(req.body.body.password, salt);
-    req.body.body.password = await newpassword;
     try {
-      const data = await User.findByIdAndUpdate(dataID, req.body.body, option);
+      req.body.body.thumbnail = req.body.body.photos[0];
+      const data = await Catalog.findByIdAndUpdate(
+        dataID,
+        req.body.body,
+        option
+      );
       res.status(200).json({ status: "successful", data });
     } catch (error) {
       const erro = requestError(error);

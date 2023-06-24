@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["firebasestorage.googleapis.com"],
+    unoptimized: true,
   },
   webpack: (config) => {
     config.ignoreWarnings = [

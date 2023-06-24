@@ -32,23 +32,12 @@ const userSchema = new Schema({
   is_readonly: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now() },
   modifiedAt: { type: String },
-
 });
 
 userSchema.pre("save", async function (next) {
   this.modifiedAt = Date.now();
   next();
 });
-// userSchema.pre("findByIdAndUpdate", async function (next) {
-//   if (this.password) {
-//     let salt = await bcrypt.genSalt(10);
-//     let newpassword = await bcrypt.hash(this.password, salt);
-//     this.password = await newpassword;
-//   }
-
-//   this.modifiedAt = Date.now();
-//   next();
-// });
 
 /**
  * This is the middleware, It will be called before saving any record

@@ -1,4 +1,4 @@
-import { Catalog } from "./../../db/catalogModel";
+import { Gallery as Catalog } from "./../../db/galleryModel";
 import connectDB from "../../auth/lib/connectDB";
 connectDB();
 
