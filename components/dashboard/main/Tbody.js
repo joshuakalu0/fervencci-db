@@ -6,7 +6,7 @@ import Action from "./Action";
 export default function Tbody({ filter }) {
   const ro = useRouter();
   const query = ro.query;
-  const target = query.page?.toLowerCase() || "user";
+  const target = query.table?.toLowerCase() || "user";
   const [data, setdata] = useState([]);
   const [object, setter] = useContext(Dashboardcontext);
   useEffect(() => {

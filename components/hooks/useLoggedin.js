@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+// **needs to be worked on**
 export default function useLoggedin(url = "/") {
   const [data, setdata] = useState({});
   const [isloading, setisloading] = useState(true);
@@ -21,19 +21,23 @@ export default function useLoggedin(url = "/") {
     }
     if (session.status === "authenticated") {
       if (router.pathname === url) {
-        router.push("/dashboard");
+        router.push("/dashboard/user");
       }
       // if()   //check if data exist first before mking request
       axios
-        .get(`/api/user/find?by=email&email=${session.data.user.email}`)
+        .get(
+          `https://fervencciD.onrender.com/api/v1/users?searchBy=email,${session.data.user.email}`
+        )
         .then((ev) => {
           let temp = { ...session.data.user };
-          temp.image = ev.data.data.photos;
-          temp.username = ev.data.data.username;
+
+          const d = ev.data.data[0];
+          temp.image = d.photos;
+          temp.username = d.username;
           temp.premission =
-            ev.data.data.is_admin === true
+            d.is_admin === true
               ? "admin"
-              : ev.data.data.is_staff === true
+              : d.is_staff === true
               ? "staff"
               : "read";
           setdata(temp);

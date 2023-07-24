@@ -8,8 +8,9 @@ export default function useFetcher(setisdata, setpagecount) {
   const [object, setter] = useContext(Dashboardcontext);
 
   const ro = useRouter();
+  console.log(ro);
   const query = ro.query;
-  const target = query.page?.toLowerCase() || "user";
+  const target = query.table?.toLowerCase() || "user";
   const array = display(target);
   function dbquery(url, check = false) {
     axios

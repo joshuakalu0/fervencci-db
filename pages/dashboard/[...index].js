@@ -10,19 +10,22 @@ import { pageIdentify } from "../../components/utiles/pageidentify";
 import connectDB from "../api/auth/lib/connectDB";
 import Rotator from "../../components/utiles/Back";
 import Link from "next/link";
-import { Modelfind } from "../api/db";
+
 import useLoggedin from "../../components/hooks/useLoggedin";
 import Loading from "../../components/utiles/Loading";
 import ErrorPage from "next/error";
+import axios from "axios";
 
 export default function Action(serverdata) {
   const formdata = JSON.parse(serverdata?.response);
+  console.log(formdata);
   const { action, data, inituals, page, schema } = formdata;
   const ro = useRouter();
   const [issubmitting, setissubmitting] = useState(null);
   const [upload, setupload] = useState(null);
   const [makeRequest] = useFetchUpload(setissubmitting, setupload);
   const [isloading, isloggedin, session] = useLoggedin("/");
+  console.log(session);
   const premission = session.premission;
   if (!ro.isFallback && !serverdata) {
     return <ErrorPage statusCode={404} />;
@@ -61,10 +64,13 @@ export default function Action(serverdata) {
               enableReinitialize
               onSubmit={(values, actions) => {
                 console.log(values);
+                const host = `https://fervencciD.onrender.com/api/v1/${recordDetails.page}`;
                 setissubmitting(true);
                 const recordDetails = {};
                 recordDetails.page = page;
                 recordDetails.action = action;
+                recordDetails.url = host;
+
                 if (page == "measurement") {
                   let ma = values.material;
                   let de = values.design_choice;
@@ -75,12 +81,10 @@ export default function Action(serverdata) {
                 if (formdata.action === "create") {
                   recordDetails.id = null;
                   recordDetails.uuid = null;
-                  recordDetails.url = `/api/${page}/create`;
                 } else if (action === "edit") {
                   recordDetails.id = inituals?._id || null;
                   recordDetails.uuid = inituals?.uuid || null;
-                  recordDetails.url =
-                    `/api/${page}/edit/${inituals?._id}` || null;
+                  recordDetails.url = `${host}/{inituals?._id}` || null;
                 }
                 if (page === "user") {
                   localStorage.setItem("value", JSON.stringify(values));
@@ -124,7 +128,6 @@ export default function Action(serverdata) {
 
 export async function getServerSideProps(context) {
   const list = context.params.index;
-  connectDB();
 
   // [edit,table,id]
   // [0,1,2]
@@ -133,10 +136,16 @@ export async function getServerSideProps(context) {
   if (list[2]) {
     // if id is passed in
     const filter = Object.keys(page_i.inituals).join(" ");
-    const Model = Modelfind(list[1]);
+
     try {
-      const data = await Model.findById(list[2]).sort("createdAt");
-      page_i.inituals = data;
+      const url = `https://fervencciD.onrender.com/api/v1/${list[1]}s/${list[2]}`;
+      const data = await axios.get(url);
+      console.log(url);
+      const count = data.data.length;
+      const response = data.data.data;
+      console.log(response, "data");
+
+      page_i.inituals = response;
       return {
         props: {
           response: JSON.stringify(page_i),
@@ -144,12 +153,12 @@ export async function getServerSideProps(context) {
         },
       };
     } catch (error) {
+      console.log(error, "err");
       return {
         props: {
           error: "invalid id passed in the url",
         },
       };
-      console.log(error);
     }
   } else if (list[0] === "create" || list[0] === "edit") {
     return {

@@ -44,7 +44,7 @@ export default function actionChecker(
     case "catalog":
       Value = second;
       break;
-    case "measurements":
+    case "measurement":
       Value = third;
       break;
     case "report":
@@ -53,7 +53,7 @@ export default function actionChecker(
 
     default:
       Value = null;
-      throw new Error(errorString);
+      throw new Error(`${errorString} : ${target}`);
       break;
   }
   return Value;

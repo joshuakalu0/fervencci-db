@@ -46,6 +46,7 @@ export async function getServerSideProps(context) {
   } catch (error) {
     query = "user";
   }
+  const url = `https://fervencciD.onrender.com/api/v1/${page}`;
   const Model = Modelfind(query);
 
   const array = display(query);

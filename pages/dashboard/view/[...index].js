@@ -3,16 +3,19 @@ import Imgview from "../../../components/view/Imgview";
 import Textview from "../../../components/view/Textview";
 import connectDB from "../../api/auth/lib/connectDB";
 import Rotator from "../../../components/utiles/Back";
-import { Modelfind } from "../../api/db";
-import useLoggedin from "../../../components/hooks/useLoggedin";
+
+// import useLoggedin from "../../../components/hooks/useLoggedin";
 import Loading from "../../../components/utiles/Loading";
 import ErrorPage from "next/error";
+import axios from "axios";
 
 export default function Action(data) {
-  const record_i = JSON.parse(data.record);
+  const record_i = JSON.parse(data.data);
   const { record, table } = record_i;
+  console.log(record, table);
   const fields = Object.keys(record);
   const [isloading, isloggedin, session] = useLoggedin("/");
+  console.log(session);
   const premission = session.premission;
   const ro = user;
   if (!ro.isFallback && !data) {
@@ -39,13 +42,11 @@ export default function Action(data) {
                 record id being view: {record["_id"]}
               </small>
             </div>
-
             {/* start */}
             {fields.map((field, i) => {
               if (typeof record[field] == "object") {
                 return <Imgview key={i} header={field} data={record[field]} />;
               }
-
               if (
                 record[field] === record["_id"] ||
                 record[field] === record["__v"]
@@ -54,11 +55,10 @@ export default function Action(data) {
               }
               return <Textview key={i} header={field} data={record[field]} />;
             })}
-
             {/* end */}
-            {(premission === "staff" || premission === "admin") && (
+            {/* {(premission === "staff" || premission === "admin") && (
               <Actionview table={table} id={record["_id"]} />
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -68,38 +68,35 @@ export default function Action(data) {
 
 export async function getServerSideProps(context) {
   const list = context.params.index;
-  if (!list[0]) {
-    return {
-      notFound: true,
-    };
-  }
 
-  connectDB();
   if (list[0] && list[1]) {
     console.log(true, "list");
     const tableName = list[0];
     const recordID = list[1];
-    const Model = Modelfind(tableName);
-    let response = null;
+    const url = `https://fervencciD.onrender.com/api/v1/${tableName}s/${recordID}`;
+    console.log(url);
     try {
-      response = await Model.findById(recordID);
+      const data = await axios.get(url);
+
+      const response = data.data.data;
+      const record = {
+        record: response,
+        table: tableName,
+      };
+      console.log(response, "data");
+      return {
+        props: {
+          data: JSON.stringify(record),
+        },
+      };
     } catch (error) {
       return {
         notFound: true,
       };
     }
-    const record = {
-      record: response,
-      table: tableName,
-    };
-    return {
-      props: {
-        record: JSON.stringify(record),
-      },
-    };
-  } else {
-    return {
-      notFound: true,
-    };
   }
+
+  return {
+    notFound: true,
+  };
 }

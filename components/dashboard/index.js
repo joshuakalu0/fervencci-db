@@ -9,7 +9,7 @@ import { Dashboardcontext } from "../../pages/dashboard";
 export default function DashBoard() {
   const [object, setter] = useContext(Dashboardcontext);
   const route = useRouter();
-  const query = route.query;
+  const query = route.table;
   useEffect(() => {}, [object.page]);
 
   return (

@@ -16,7 +16,7 @@ export default function SideElements({ data }) {
             }}
           >
             <div>
-              <Link className='w-[100%] h-[100%]' href={`?page=${data}`}>
+              <Link className='w-[100%] h-[100%]' href={`/dashboard/${data}`}>
                 {data}
               </Link>
             </div>

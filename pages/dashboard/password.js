@@ -2,20 +2,20 @@ import { Clear, Save } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import FormGenerator from "../../components/form";
-import FormButton from "../../components/form/FormButton";
-import connectDB from "../api/auth/lib/connectDB";
-import Rotator from "../../components/utiles/Back";
+import { useState } from "react";
+import FormGenerator from "../../../../components/form";
+import FormButton from "../../../../components/form/FormButton";
+import connectDB from "../../../api/auth/lib/connectDB";
+import Rotator from "../../../../components/utiles/Back";
 import Link from "next/link";
 import {
   password_data,
   password_initial,
   password_validationSchema,
-} from "../../lib/form_data/password_data";
-import useFetchUpload from "../../components/hooks/useFetchUpload";
-import useLoggedin from "../../components/hooks/useLoggedin";
-import Loading from "../../components/utiles/Loading";
+} from "../../../../lib/form_data/password_data";
+import useFetchUpload from "../../../../components/hooks/useFetchUpload";
+import useLoggedin from "../../../../components/hooks/useLoggedin";
+import Loading from "../../../../components/utiles/Loading";
 
 export default function Action() {
   const ro = useRouter();
